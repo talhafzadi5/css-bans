@@ -16,9 +16,8 @@ class SetLanguage
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($language = $request->cookie('language')) {
-            App::setLocale($language);
-        }
+        // Always set Hebrew as the locale
+        App::setLocale('he');
 
         return $next($request);
     }

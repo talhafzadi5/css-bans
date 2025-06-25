@@ -22,29 +22,6 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun light-mode"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
                     </a>
                 </li>
-                <li class="nav-item dropdown">
-                    <select id="language-dropdown" class="form-select">
-                        <option {{ app()->getLocale() == 'en' ? 'selected' : '' }} value="en" data-image="{{ Vite::asset('resources/images/1x1/us.svg') }}">English</option>
-                        <option {{ app()->getLocale() == 'de' ? 'selected' : '' }} value="de" data-image="{{ Vite::asset('resources/images/1x1/de.svg') }}">Deutsch</option>
-                        <option {{ app()->getLocale() == 'es' ? 'selected' : '' }} value="es" data-image="{{ Vite::asset('resources/images/1x1/es.svg') }}">Español</option>
-                        <option {{ app()->getLocale() == 'fr' ? 'selected' : '' }} value="fr" data-image="{{ Vite::asset('resources/images/1x1/fr.svg') }}">Français</option>
-                        <option {{ app()->getLocale() == 'it' ? 'selected' : '' }} value="it" data-image="{{ Vite::asset('resources/images/1x1/it.svg') }}">Italiano</option>
-                        <option {{ app()->getLocale() == 'ja' ? 'selected' : '' }} value="ja" data-image="{{ Vite::asset('resources/images/1x1/jp.svg') }}">日本語</option>
-                        <option {{ app()->getLocale() == 'ko' ? 'selected' : '' }} value="ko" data-image="{{ Vite::asset('resources/images/1x1/kr.svg') }}">한국어</option>
-                        <option {{ app()->getLocale() == 'pt_BR' ? 'selected' : '' }} value="pt_BR" data-image="{{ Vite::asset('resources/images/1x1/br.svg') }}">Brasileira</option>
-                        <option {{ app()->getLocale() == 'pt_PT' ? 'selected' : '' }} value="pt_PT" data-image="{{ Vite::asset('resources/images/1x1/pt.svg') }}">Português</option>
-                        <option {{ app()->getLocale() == 'ru' ? 'selected' : '' }} value="ru" data-image="{{ Vite::asset('resources/images/1x1/ru.svg') }}">Русский</option>
-                        <option {{ app()->getLocale() == 'zh_CN' ? 'selected' : '' }} value="zh_CN" data-image="{{ Vite::asset('resources/images/1x1/cn.svg') }}">中文</option>
-                        <option {{ app()->getLocale() == 'ro' ? 'selected' : '' }} value="ro" data-image="{{ Vite::asset('resources/images/1x1/ro.svg') }}">Românesc</option>
-                        <option {{ app()->getLocale() == 'cz' ? 'selected' : '' }} value="cs" data-image="{{ Vite::asset('resources/images/1x1/cz.svg') }}">Čeština</option>
-                        <option {{ app()->getLocale() == 'sk' ? 'selected' : '' }} value="sk" data-image="{{ Vite::asset('resources/images/1x1/sk.svg') }}">Slovenčina</option>
-                        <option {{ app()->getLocale() == 'tr' ? 'selected' : '' }} value="tr" data-image="{{ Vite::asset('resources/images/1x1/tr.svg') }}">Türkçe</option>
-                        <option {{ app()->getLocale() == 'uk' ? 'selected' : '' }} value="uk" data-image="{{ Vite::asset('resources/images/1x1/uk.svg') }}">українська</option>
-                        <option {{ app()->getLocale() == 'hu' ? 'selected' : '' }} value="hu" data-image="{{ Vite::asset('resources/images/1x1/hu.svg') }}">Magyar</option>
-                        <option {{ app()->getLocale() == 'se' ? 'selected' : '' }} value="se" data-image="{{ Vite::asset('resources/images/1x1/se.svg') }}">Svenska</option>
-                        <option {{ app()->getLocale() == 'bg' ? 'selected' : '' }} value="bg" data-image="{{ Vite::asset('resources/images/1x1/bg.svg') }}">Български</option>
-                    </select>
-                </li>
                 <li class="nav-item nav-link theme-toggle-item">
                     <a class="nav-link" href="https://github.com/counterstrikesharp-panel/css-bans">
                         <i class="fab fa-github"></i>
@@ -88,5 +65,3 @@
             </ul>
         </header>
     </div>
-
-@vite(['resources/js/nav.js'])

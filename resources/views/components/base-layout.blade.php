@@ -12,7 +12,7 @@
     $isAltMenu = layoutConfig()['alt-menu'];
 @endphp
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="he" dir="rtl">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -53,6 +53,136 @@
     <link rel="stylesheet" href="{{asset('plugins/notification/snackbar/snackbar.min.css')}}">
     @vite(['resources/scss/light/plugins/notification/snackbar/custom-snackbar.scss'])
     <link rel="stylesheet" href="{{asset('theme/theme.css')}}">
+    
+    <!-- RTL Support -->
+    <style>
+        body[dir="rtl"] {
+            text-align: right;
+            font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+        }
+        
+        body[dir="rtl"] .navbar-item {
+            flex-direction: row-reverse;
+        }
+        
+        body[dir="rtl"] .nav-item:not(:last-child) {
+            margin-left: 1rem;
+            margin-right: 0;
+        }
+        
+        body[dir="rtl"] .dropdown-menu {
+            left: auto !important;
+            right: 0 !important;
+        }
+        
+        body[dir="rtl"] .sidebar-wrapper ul.menu-categories li.menu .nav-link {
+            padding-right: 30px;
+            padding-left: 15px;
+            text-align: right;
+        }
+        
+        body[dir="rtl"] .sidebar-wrapper ul.menu-categories li.menu .nav-link svg {
+            margin-left: 10px;
+            margin-right: 0;
+            float: left;
+        }
+        
+        body[dir="rtl"] .main-content {
+            margin-right: 0;
+            margin-left: auto;
+        }
+        
+        body[dir="rtl"] .table th,
+        body[dir="rtl"] .table td {
+            text-align: right;
+        }
+        
+        body[dir="rtl"] .btn {
+            margin-left: 5px;
+            margin-right: 0;
+        }
+        
+        body[dir="rtl"] .form-label {
+            text-align: right;
+        }
+        
+        body[dir="rtl"] .alert {
+            text-align: right;
+        }
+        
+        body[dir="rtl"] .breadcrumb {
+            text-align: right;
+        }
+        
+        body[dir="rtl"] .card-header {
+            text-align: right;
+        }
+        
+        body[dir="rtl"] .card-body {
+            text-align: right;
+        }
+        
+        body[dir="rtl"] .pagination {
+            justify-content: flex-end;
+        }
+        
+        body[dir="rtl"] .float-left {
+            float: right !important;
+        }
+        
+        body[dir="rtl"] .float-right {
+            float: left !important;
+        }
+        
+        body[dir="rtl"] .text-left {
+            text-align: right !important;
+        }
+        
+        body[dir="rtl"] .text-right {
+            text-align: left !important;
+        }
+        
+        body[dir="rtl"] .ml-auto {
+            margin-left: 0 !important;
+            margin-right: auto !important;
+        }
+        
+        body[dir="rtl"] .mr-auto {
+            margin-right: 0 !important;
+            margin-left: auto !important;
+        }
+        
+        body[dir="rtl"] .pl-3 {
+            padding-left: 0 !important;
+            padding-right: 1rem !important;
+        }
+        
+        body[dir="rtl"] .pr-3 {
+            padding-right: 0 !important;
+            padding-left: 1rem !important;
+        }
+        
+        body[dir="rtl"] input, 
+        body[dir="rtl"] textarea, 
+        body[dir="rtl"] select {
+            text-align: right;
+        }
+        
+        body[dir="rtl"] .sidebar-wrapper {
+            right: 0;
+            left: auto;
+        }
+        
+        /* Fix for Bootstrap components in RTL */
+        body[dir="rtl"] .modal-header .btn-close {
+            margin: -0.5rem auto -0.5rem -0.5rem;
+        }
+        
+        body[dir="rtl"] .dropdown-toggle::after {
+            margin-left: 0;
+            margin-right: 0.255em;
+        }
+    </style>
     <!-- END GLOBAL MANDATORY STYLES -->
 </head>
 <body @class([
@@ -61,7 +191,7 @@
         'alt-menu' => ($isAltMenu || Request::routeIs('collapsibleMenu') ? true : false),
         'error' => (Request::routeIs('404') ? true : false),
         'maintanence' => (Request::routeIs('maintenance') ? true : false),
-    ]) @if ($scrollspy == 1) {{ $scrollspyConfig }} @else {{''}} @endif   @if (Request::routeIs('fullWidth')) layout="full-width"  @endif >
+    ]) @if ($scrollspy == 1) {{ $scrollspyConfig }} @else {{''}} @endif   @if (Request::routeIs('fullWidth')) layout="full-width"  @endif dir="rtl" >
 
     <!-- BEGIN LOADER -->
     <x-layout-loader/>

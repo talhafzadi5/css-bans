@@ -15,6 +15,7 @@ use App\Http\Controllers\K4Ranks\RanksController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MutesController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,7 +42,7 @@ Route::middleware(['checkSetup'])->group(function () {
     Route::prefix('list')->group(function () {
         Route::get('bans', [BansController::class, 'bans'])->name('list.bans');
         Route::post('bans', [BansController::class, 'getBansList']);
-        Route::get('mutes', [MutesController::class, 'mutes'])->name('list.mutes');;
+        Route::get('mutes', [MutesController::class, 'mutes'])->name('list.mutes');
         Route::post('mutes', [MutesController::class, 'getMutesList']);
         Route::get('admins', [AdminController::class, 'admins'])->name('admins.list')->middleware('admin');
         Route::post('admins', [AdminController::class, 'getAdminsList'])->middleware('admin');

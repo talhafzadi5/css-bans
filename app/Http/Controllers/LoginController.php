@@ -70,7 +70,7 @@ class LoginController extends Controller
                 } catch(\Exception $e) {
                     Log::error('auth.rank.cache'. $e->getMessage());
                 }
-                return redirect()->route('home')->with('success', __('admins.steamAuthSuccess'));;
+                return redirect()->route('home')->with('success', __('admins.steamAuthSuccess'));
             } else {
                 return redirect()->route('home')->with('error', __('admins.steamAuthError'));
             }

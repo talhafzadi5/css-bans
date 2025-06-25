@@ -1,21 +1,14 @@
 <?php
 
-// Optimize for serverless
-ini_set('memory_limit', '1024M');
+// Optimize for serverless environment
+ini_set('memory_limit', '512M');
+ini_set('max_execution_time', 30);
 
-// Cache bootstrap files if they don't exist
-if (!file_exists('/tmp/config.php')) {
-    require_once __DIR__ . '/../bootstrap/app.php';
-    $app = require_once __DIR__ . '/../bootstrap/app.php';
-    
-    try {
-        // Generate optimized files
-        \Illuminate\Support\Facades\Artisan::call('config:cache');
-        \Illuminate\Support\Facades\Artisan::call('route:cache');
-        \Illuminate\Support\Facades\Artisan::call('view:cache');
-    } catch (Exception $e) {
-        // Continue if caching fails
-    }
+// Ensure autoloader is available
+if (!file_exists(__DIR__ . '/../vendor/autoload.php')) {
+    http_response_code(500);
+    echo 'Vendor directory not found. Please run: composer install';
+    exit(1);
 }
 
 // Forward Vercel requests to public index.

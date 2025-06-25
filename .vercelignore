@@ -1,0 +1,37 @@
+# Exclude unnecessary files from Vercel deployment
+node_modules
+.env
+.env.local
+.env.example
+storage/logs/*
+!storage/logs/.gitignore
+storage/framework/cache/*
+!storage/framework/cache/.gitignore
+storage/framework/sessions/*
+!storage/framework/sessions/.gitignore
+storage/framework/views/*
+!storage/framework/views/.gitignore
+storage/app/*
+!storage/app/.gitignore
+!storage/app/public
+
+# Development files
+.git
+.gitignore
+README.md
+tests/
+.phpunit.result.cache
+
+# Build files (but include vendor)
+!vendor/
+
+# Include necessary Laravel files
+!bootstrap/
+!config/
+!app/
+!resources/
+!public/
+!routes/
+!artisan
+!composer.json
+!composer.lock 

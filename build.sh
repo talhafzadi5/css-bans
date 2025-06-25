@@ -1,33 +1,68 @@
 #!/bin/bash
 
 # Laravel Build Script for Vercel Deployment
-echo "Starting Laravel optimization for production..."
+echo "🚀 Starting Laravel optimization for Vercel..."
+
+# Ensure we're in the right directory
+cd "$(dirname "$0")"
+
+# Check if composer is available
+if ! command -v composer &> /dev/null; then
+    echo "❌ Composer not found. Installing dependencies with php composer.phar..."
+    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    php composer-setup.php --quiet
+    php -r "unlink('composer-setup.php');"
+    alias composer='php composer.phar'
+fi
 
 # Install dependencies
-echo "Installing Composer dependencies..."
-composer install --no-dev --optimize-autoloader --no-interaction
+echo "📦 Installing Composer dependencies..."
+composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist --no-scripts
 
-# Clear and cache configuration
-echo "Caching Laravel configurations..."
-php artisan config:clear
-php artisan config:cache
+# Create necessary directories
+echo "📁 Creating necessary directories..."
+mkdir -p bootstrap/cache
+mkdir -p storage/app
+mkdir -p storage/framework/cache
+mkdir -p storage/framework/sessions
+mkdir -p storage/framework/views
+mkdir -p storage/logs
 
-# Cache routes
-echo "Caching routes..."
-php artisan route:clear
-php artisan route:cache
+# Set proper permissions (if not on Windows)
+if [[ "$OSTYPE" != "msys" && "$OSTYPE" != "win32" ]]; then
+    chmod -R 755 bootstrap/cache
+    chmod -R 755 storage
+fi
 
-# Cache views
-echo "Caching views..."
-php artisan view:clear
-php artisan view:cache
+# Only run artisan commands if we have a working Laravel installation
+if [ -f "artisan" ] && composer show laravel/framework > /dev/null 2>&1; then
+    echo "⚡ Optimizing Laravel for production..."
+    
+    # Clear all caches first
+    php artisan config:clear --quiet || true
+    php artisan route:clear --quiet || true
+    php artisan view:clear --quiet || true
+    php artisan cache:clear --quiet || true
+    
+    # Generate optimized files for production
+    echo "🔧 Generating production cache files..."
+    php artisan config:cache --quiet || echo "⚠️  Config cache failed"
+    php artisan route:cache --quiet || echo "⚠️  Route cache failed"
+    php artisan view:cache --quiet || echo "⚠️  View cache failed"
+else
+    echo "⚠️  Skipping artisan commands - Laravel not properly installed"
+fi
 
 # Optimize autoloader
-echo "Optimizing autoloader..."
-composer dump-autoload --optimize
+echo "🎯 Optimizing autoloader..."
+composer dump-autoload --optimize --classmap-authoritative --quiet
 
-# Clear application cache
-echo "Clearing application cache..."
-php artisan cache:clear
+echo "✅ Build completed successfully!"
 
-echo "Build completed successfully!" 
+# Show what was generated
+if [ -d "bootstrap/cache" ]; then
+    echo "📊 Cache files generated:"
+    ls -la bootstrap/cache/ 2>/dev/null || echo "No cache files found"
+fi
+
+echo "🎉 Ready for Vercel deployment!" 

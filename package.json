@@ -1,8 +1,13 @@
 {
-    "private": true,
+    "name": "css-bans",
+    "version": "1.0.0",
+    "description": "CS2 Bans Management System",
     "scripts": {
-        "dev": "vite",
-        "build": "vite build"
+        "vercel-build": "bash build.sh",
+        "build": "bash build.sh"
+    },
+    "engines": {
+        "node": ">=16.x"
     },
     "devDependencies": {
         "axios": "^0.27",

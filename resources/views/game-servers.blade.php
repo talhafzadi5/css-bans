@@ -108,7 +108,7 @@
             
             function loadServers() {
                 showLoader();
-                fetch('{{ url("/servers") }}')
+                fetch('{!! env('VITE_SITE_DIR') !!}/servers')
                     .then(response => response.json())
                     .then(data => {
                         serversData = data;
@@ -223,7 +223,7 @@
                 formData.append('serverId', serverId);
                 formData.append('reason', reason);
                 
-                fetch('{{ url("/players/action") }}', {
+                fetch('{!! env('VITE_SITE_DIR') !!}/players/action', {
                     method: 'POST',
                     body: formData,
                     headers: {

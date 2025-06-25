@@ -34,15 +34,34 @@
                 position: relative;
                 z-index: 2;
                 color: white;
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+            }
+            .server-card .card-content {
+                flex: 1;
+            }
+            .server-card .card-footer-button {
+                margin-top: auto;
+                padding-top: 15px;
             }
             .server-card .card-body * {
                 color: white !important;
             }
-            .server-card .text-muted {
+            .server-card .text-muted,
+            body.layout-dark .server-card .text-muted,
+            body.layout-light .server-card .text-muted {
                 color: rgba(255, 255, 255, 0.8) !important;
             }
-            .server-card .text-secondary {
+            .server-card .text-secondary,
+            body.layout-dark .server-card .text-secondary,
+            body.layout-light .server-card .text-secondary {
                 color: rgba(255, 255, 255, 0.7) !important;
+            }
+            .server-card small,
+            body.layout-dark .server-card small,
+            body.layout-light .server-card small {
+                color: rgba(255, 255, 255, 0.8) !important;
             }
             .server-card:hover {
                 transform: translateY(-5px);
@@ -193,38 +212,40 @@
                         <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mb-4">
                             <div class="card server-card h-100" style="background: url('${mapImageUrl}') center center/cover no-repeat !important;" onclick="loadServerPlayers(${server.id}, '${server.name.replace(/'/g, "\\'")}')">
                                 <div class="card-body">
-                                    <div class="row align-items-center">
-                                        <div class="col-12 mb-3">
-                                            <h5 class="card-title mb-1">${server.name}</h5>
-                                            <span class="badge ${statusClass === 'server-status-online' ? 'badge-success' : 'badge-danger'}">${statusText}</span>
-                                        </div>
-                                        
-                                        <div class="col-6">
-                                            <div class="d-flex align-items-center mb-2">
-                                                <i class="fas fa-users me-2 text-primary"></i>
-                                                <span class="players-count ${statusClass}">${playerCount}</span>
+                                    <div class="card-content">
+                                        <div class="row">
+                                            <div class="col-12 mb-3">
+                                                <h5 class="card-title mb-1">${server.name}</h5>
+                                                <span class="badge ${statusClass === 'server-status-online' ? 'badge-success' : 'badge-danger'}">${statusText}</span>
                                             </div>
-                                            <div class="d-flex align-items-center">
-                                                <i class="fas fa-network-wired me-2 text-secondary"></i>
-                                                <small class="text-muted">${server.ip}:${server.port}</small>
+                                            
+                                            <div class="col-6">
+                                                <div class="d-flex align-items-center mb-2">
+                                                    <i class="fas fa-users me-2 text-primary"></i>
+                                                    <span class="players-count ${statusClass}">${playerCount}</span>
+                                                </div>
+                                                <div class="d-flex align-items-center">
+                                                    <i class="fas fa-network-wired me-2 text-secondary"></i>
+                                                    <small class="text-muted">${server.ip}:${server.port}</small>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-6 text-end">
+                                                ${isOnline && server.map && !server.map.includes('badge-danger') ? 
+                                                    `<span class="server-map">${server.map}</span>` : 
+                                                    '<span class="badge badge-secondary">No Map</span>'
+                                                }
                                             </div>
                                         </div>
-                                        
-                                        <div class="col-6 text-end">
-                                            ${isOnline && server.map && !server.map.includes('badge-danger') ? 
-                                                `<span class="server-map">${server.map}</span>` : 
-                                                '<span class="badge badge-secondary">No Map</span>'
-                                            }
-                                        </div>
-                                        
-                                        <div class="col-12 mt-3">
-                                            ${isOnline ? 
-                                                `<button class="btn btn-success btn-sm w-100" onclick="event.stopPropagation(); window.open('steam://connect/${server.ip}:${server.port}', '_blank')">
-                                                    <i class="fas fa-play me-1"></i> {{ __('dashboard.connect') }}
-                                                </button>` :
-                                                '<button class="btn btn-secondary btn-sm w-100" disabled>{{ __("dashboard.offline") }}</button>'
-                                            }
-                                        </div>
+                                    </div>
+                                    
+                                    <div class="card-footer-button">
+                                        ${isOnline ? 
+                                            `<button class="btn btn-success btn-sm w-100" onclick="event.stopPropagation(); window.open('steam://connect/${server.ip}:${server.port}', '_blank')">
+                                                <i class="fas fa-play me-1"></i> {{ __('dashboard.connect') }}
+                                            </button>` :
+                                            '<button class="btn btn-secondary btn-sm w-100" disabled>{{ __("dashboard.offline") }}</button>'
+                                        }
                                     </div>
                                 </div>
                             </div>

@@ -87,6 +87,8 @@ Route::middleware(['checkSetup'])->group(function () {
     Route::group(['prefix' => 'servers'], function () {
         Route::get('/{server_id}/players', [ServerController::class, 'getPlayers']);
     });
+    
+    Route::get('/game-servers', [ServerController::class, 'gameServers'])->name('game-servers');
     /**
      * Ranks Module
      */

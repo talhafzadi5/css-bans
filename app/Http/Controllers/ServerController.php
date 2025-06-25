@@ -337,4 +337,9 @@ class ServerController extends Controller
 
         return response()->json(['status' => 'success', 'message' => 'Player counts recorded']);
     }
+
+    public function gameServers()
+    {
+        return view('game-servers');
+    }
 }

@@ -81,8 +81,8 @@
                 </a>
             </li>
 
-            <li class="menu {{ Request::is('*list/bans*') || Request::is('*list/mutes*') || Request::is('*appeals*') || Request::is('*reports*') ? 'active' : '' }}">
-                <a href="#serverSection" data-bs-toggle="collapse" aria-expanded="{{ Request::is('*list/bans*') || Request::is('*list/mutes*') || Request::is('*appeals*') || Request::is('*reports*') ? 'true' : 'false' }}" class="dropdown-toggle">
+            <li class="menu {{ Request::is('*list/bans*') || Request::is('*list/mutes*') || Request::is('*game-servers*') || Request::is('*appeals*') || Request::is('*reports*') ? 'active' : '' }}">
+                <a href="#serverSection" data-bs-toggle="collapse" aria-expanded="{{ Request::is('*list/bans*') || Request::is('*list/mutes*') || Request::is('*game-servers*') || Request::is('*appeals*') || Request::is('*reports*') ? 'true' : 'false' }}" class="dropdown-toggle">
                     <div class="">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -102,7 +102,7 @@
                         </svg>
                     </div>
                 </a>
-                <ul class="collapse submenu list-unstyled {{ Request::is('*list/bans*') || Request::is('*list/mutes*') || Request::is('*appeals*') || Request::is('*reports*') ? 'show' : '' }}" id="serverSection" data-bs-parent="#accordionExample">
+                <ul class="collapse submenu list-unstyled {{ Request::is('*list/bans*') || Request::is('*list/mutes*') || Request::is('*game-servers*') || Request::is('*appeals*') || Request::is('*reports*') ? 'show' : '' }}" id="serverSection" data-bs-parent="#accordionExample">
                     <li class="{{ Request::is('*list/bans*') ? 'active' : '' }}">
                         <a href="{{getAppSubDirectoryPath();}}/list/bans" aria-expanded="false" class="dropdown-toggle">
                             <div class="">
@@ -116,6 +116,13 @@
                         <a href="{{getAppSubDirectoryPath();}}/list/mutes" aria-expanded="false" class="dropdown-toggle">
                             <div class="">
                                 <i class="fas fa-microphone-alt-slash fa-fw me-3"></i> <span>{{ __('dashboard.mutes') }}</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="{{ Request::is('*game-servers*') ? 'active' : '' }}">
+                        <a href="{{getAppSubDirectoryPath();}}/game-servers" aria-expanded="false" class="dropdown-toggle">
+                            <div class="">
+                                <i class="fas fa-server fa-fw me-3"></i> <span>{{ __('dashboard.gameServers') }}</span>
                             </div>
                         </a>
                     </li>

@@ -24,7 +24,8 @@ return [
     'lost' => 'הפסדים',
     'position' => 'מיקום',
     'lastSeen' => 'נראה לאחרונה',
-    'server' => 'שרת',
+    'server' => 'שרתים',
+    'gameServers' => 'שרתי משחק',
     'ip' => 'IP',
     'port' => 'פורט',
     'map' => 'מפה',
@@ -33,4 +34,6 @@ return [
     'added' => 'נוסף',
     'expires' => 'פג תוקף',
     'recentMutes' => 'השתקות אחרונות',
+    'connect' => 'התחבר',
+    'offline' => 'לא פעיל',
 ]; 

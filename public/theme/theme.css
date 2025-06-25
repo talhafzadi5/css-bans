@@ -1,0 +1,138 @@
+/**
+#################################################################
+Rename this file to theme.css if you want to enable theme and customize it
+ **/
+
+body.layout-dark:before, .layout-dark {
+    background: rgb(0, 0, 0) !important;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(30, 30, 30, 1) 50%, rgba(0, 0, 0, 1) 100%) !important;
+}
+
+body.layout-dark .header-container {
+    background: rgb(139, 0, 0) !important;
+    background: linear-gradient(90deg, rgb(0 0 0) 0%, rgb(0 0 0) 50%, rgb(35 126 97) 100%) !important;
+}
+
+
+.sidebar-theme {
+    background: rgb(0, 0, 0) !important;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(30, 30, 30, 1) 50%, rgba(0, 0, 0, 1) 100%) !important;
+}
+
+.theme-brand {
+    background: rgb(0, 0, 0) !important;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(30, 30, 30, 1) 50%, rgba(0, 0, 0, 1) 100%) !important;
+    border: none !important;
+}
+
+.card {
+    background: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(60, 60, 60, 0.95) 50%, rgba(0, 0, 0, 1) 100%) !important;
+    border-radius: 8px !important;
+    color: #fff !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.layout-dark #sidebar ul.menu-categories li.menu>.dropdown-toggle[aria-expanded=true],body.layout-dark #sidebar ul.menu-categories li.menu.active > .dropdown-toggle {
+    background: linear-gradient(90deg, rgb(17,17,17) 0%, rgb(130,20,20) 50%, rgb(27,141,118) 100%) !important;
+}
+
+/**
+ Text COLOR
+ **/
+body {
+    color: #fff !important;
+}
+
+.header-container, .card-header {
+    color: #fff !important;
+}
+
+a {
+    color: #7eeac2 !important;
+}
+
+a:hover {
+    color: #ff6347 !important;
+}
+
+/**
+ Buttons
+ **/
+button {
+    background-color: #b22222 !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 4px !important;
+    padding: 10px 20px !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5) !important;
+}
+
+button:hover {
+    background-color: #8b0000 !important;
+}
+
+/**
+ Inputs
+ **/
+input, textarea {
+    background-color: #1c1c1c !important;
+    color: #fff !important;
+    border: 1px solid #b22222 !important;
+    border-radius: 4px !important;
+    padding: 10px !important;
+}
+
+input::placeholder, textarea::placeholder {
+    color: #a9a9a9 !important;
+}
+
+input:focus, textarea:focus {
+    border-color: #ff0000 !important;
+    outline: none !important;
+    box-shadow: 0 0 5px rgba(255, 0, 0, 0.5) !important;
+}
+.badge-info {
+    background: #000 !important;
+}
+.badge-light-info {
+     color: #fff !important;
+    background: linear-gradient(90deg, rgb(17,17,17) 0%, rgb(48,107,92) 50%, rgb(27,141,118) 100%) !important;
+}
+.badge-light-warning {
+    color: #fff !important;
+    background: linear-gradient(90deg, rgb(17,17,17) 0%, rgb(156,146,69) 50%, rgb(27,141,118) 100%) !important;
+}
+.btn-success {
+    background: linear-gradient(90deg, rgb(17,17,17) 0%, rgb(24,24,23) 50%, rgb(27,141,118) 100%) !important;
+    border: none;
+}
+.badge-danger {
+    background: linear-gradient(90deg, rgb(17,17,17) 0%, rgb(24,24,23) 50%, rgb(249,12,12) 100%) !important;
+}
+th {
+    color: #7eeac2 !important;
+    font-weight: bold !important;
+}
+.badge-light-danger {
+    color: #fff !important;
+    background: linear-gradient(90deg, rgb(17,17,17) 0%, rgb(130,20,20) 50%, rgb(27,141,118) 100%) !important;
+}
+.badge-light-warning {
+    color: #fff !important;
+    background: linear-gradient(90deg, rgb(17,17,17) 0%, rgb(130,118,20) 50%, rgb(27,141,118) 100%) !important;
+}
+.nav-item button {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+.select2-container--default .select2-selection--multiple{
+    background-color: transparent !important;
+    border: none !important;
+}
+.select2-container .select2-search--inline .select2-search__field {
+    height: 39px !important;
+    margin-left: 0px !important;
+}
+.select2-container--default .select2-results>.select2-results__options {
+    color: #000 !important;
+}

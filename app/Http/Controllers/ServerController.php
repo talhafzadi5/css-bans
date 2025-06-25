@@ -153,6 +153,54 @@ class ServerController extends Controller
     }
 
     /**
+     * Parse RCON status command response to extract player information
+     * This is useful for CS2 servers where GetPlayers() might not work properly
+     */
+    private function parseRconStatusResponse($statusResponse) {
+        $players = [];
+        
+        if (empty($statusResponse)) {
+            return $players;
+        }
+        
+        Log::info('Parsing RCON status response: ' . $statusResponse);
+        
+        // Split response into lines
+        $lines = explode("\n", $statusResponse);
+        
+        foreach ($lines as $line) {
+            $line = trim($line);
+            
+            // Look for player lines (they typically contain # followed by player info)
+            // Example: #  2 "PlayerName"          STEAM_1:0:123456789  25:30       73    0 active
+            if (preg_match('/^#\s*(\d+)\s+"([^"]+)"\s+(\S+)\s+(\d+:\d+)\s+(\d+)\s+(\d+)\s+(\w+)/', $line, $matches)) {
+                $players[] = [
+                    'Name' => $matches[2],
+                    'SteamID' => $matches[3],
+                    'TimeF' => $matches[4],
+                    'Frags' => (int)$matches[5],
+                    'Deaths' => (int)$matches[6],
+                    'Status' => $matches[7]
+                ];
+                Log::info('Parsed player from RCON status: ' . json_encode($players[count($players) - 1]));
+            }
+            // Alternative pattern for different server formats
+            elseif (preg_match('/^#\s*(\d+)\s+(\d+)\s+"([^"]+)"\s+(\S+)\s+(\d+:\d+)\s+(\d+)\s+(\d+)/', $line, $matches)) {
+                $players[] = [
+                    'Name' => $matches[3],
+                    'SteamID' => $matches[4],
+                    'TimeF' => $matches[5],
+                    'Frags' => (int)$matches[6],
+                    'Deaths' => (int)$matches[7]
+                ];
+                Log::info('Parsed player from RCON status (alt pattern): ' . json_encode($players[count($players) - 1]));
+            }
+        }
+        
+        return $players;
+    }
+
+    /**
      * @param Request $request
      * @param $serverId
      * @param RconService $rcon
@@ -175,35 +223,125 @@ class ServerController extends Controller
             try {
                 $rcon->connect($serverIp, $serverPort);
                 
-                // Check if server has RCON configured
-                if ($server->rcon && $server->rcon->password) {
-                    $decryptedPassword = \Illuminate\Support\Facades\Crypt::decrypt($server->rcon->password);
-                    $rcon->setRconPassword($decryptedPassword);
-                    Log::info('Using RCON password for server: ' . $serverId);
+                // Try to get server info first to understand the server type
+                try {
+                    $serverInfo = $rcon->getInfo();
+                    Log::info('Server info: ' . json_encode($serverInfo, JSON_PRETTY_PRINT));
+                } catch (\Exception $infoException) {
+                    Log::warning('Could not get server info: ' . $infoException->getMessage());
                 }
                 
-                $players = $rcon->getPlayers();
-                Log::info('Retrieved players: ' . json_encode($players));
+                $rconPlayersWorked = false;
                 
-                // Ensure players array has proper structure
-                if (is_array($players)) {
-                    foreach ($players as $key => $player) {
-                        if (!isset($player['Name']) || empty($player['Name'])) {
-                            Log::warning('Player without name found: ' . json_encode($player));
-                            $players[$key]['Name'] = 'Unknown Player ' . ($key + 1);
+                // Check if server has RCON configured and try RCON commands first
+                if ($server->rcon && $server->rcon->password) {
+                    try {
+                        $decryptedPassword = \Illuminate\Support\Facades\Crypt::decrypt($server->rcon->password);
+                        $rcon->setRconPassword($decryptedPassword);
+                        Log::info('Using RCON password for server: ' . $serverId);
+                        
+                        // Try 'status' command which often works better for CS2
+                        try {
+                            $statusCmd = $rcon->rcon('status');
+                            Log::info('RCON status command response: ' . $statusCmd);
+                            
+                            if (!empty($statusCmd)) {
+                                $rconPlayers = $this->parseRconStatusResponse($statusCmd);
+                                if (!empty($rconPlayers)) {
+                                    $players = $rconPlayers;
+                                    $rconPlayersWorked = true;
+                                    Log::info('Successfully parsed players from RCON status command');
+                                }
+                            }
+                            
+                        } catch (\Exception $rconCmdException) {
+                            Log::warning('RCON status command failed: ' . $rconCmdException->getMessage());
                         }
-                        if (!isset($player['Frags'])) {
-                            $players[$key]['Frags'] = 0;
+                        
+                        // If status didn't work, try other commands
+                        if (!$rconPlayersWorked) {
+                            try {
+                                $rconPlayerList = $rcon->rcon('listplayers');
+                                Log::info('RCON listplayers response: ' . $rconPlayerList);
+                                
+                                // Also try the 'players' command
+                                $rconPlayersCmd = $rcon->rcon('players');
+                                Log::info('RCON players command response: ' . $rconPlayersCmd);
+                                
+                            } catch (\Exception $rconCmdException) {
+                                Log::warning('RCON commands failed: ' . $rconCmdException->getMessage());
+                            }
                         }
-                        if (!isset($player['TimeF'])) {
-                            $players[$key]['TimeF'] = '00:00';
+                        
+                    } catch (\Exception $rconException) {
+                        Log::warning('RCON setup failed: ' . $rconException->getMessage());
+                    }
+                }
+                
+                // If RCON didn't work or no RCON password, try SourceQuery GetPlayers
+                if (!$rconPlayersWorked) {
+                    $players = $rcon->getPlayers();
+                    Log::info('Raw players data from SourceQuery: ' . json_encode($players, JSON_PRETTY_PRINT));
+                    Log::info('Players data type: ' . gettype($players));
+                    Log::info('Players count: ' . (is_array($players) ? count($players) : 'not array'));
+                    
+                    // Debug: Check what keys are available in the player data
+                    if (is_array($players) && !empty($players)) {
+                        Log::info('First player structure: ' . json_encode($players[0] ?? null, JSON_PRETTY_PRINT));
+                        Log::info('Available keys in first player: ' . json_encode(array_keys($players[0] ?? []), JSON_PRETTY_PRINT));
+                        
+                        // Check if this might be CS2 with different structure
+                        if (isset($players[0]) && is_array($players[0])) {
+                            $firstPlayer = $players[0];
+                            if (isset($firstPlayer['Id']) || isset($firstPlayer['UserID']) || isset($firstPlayer['SteamID'])) {
+                                Log::info('Detected possible CS2 player structure');
+                            }
                         }
+                    }
+                    
+                    // Ensure players array has proper structure
+                    if (is_array($players)) {
+                        foreach ($players as $key => $player) {
+                            Log::info("Processing player {$key}: " . json_encode($player, JSON_PRETTY_PRINT));
+                            
+                            // Try different possible name fields
+                            $playerName = null;
+                            $possibleNameFields = ['Name', 'name', 'PlayerName', 'player_name', 'nick', 'nickname', 'Username', 'username'];
+                            
+                            foreach ($possibleNameFields as $field) {
+                                if (isset($player[$field]) && !empty(trim($player[$field]))) {
+                                    $playerName = trim($player[$field]);
+                                    Log::info("Found player name in field '{$field}': {$playerName}");
+                                    break;
+                                }
+                            }
+                            
+                            if (!$playerName) {
+                                Log::warning('No valid name found for player: ' . json_encode($player));
+                                $playerName = 'Player ' . ($key + 1) . ' (ID: ' . ($player['Id'] ?? $player['UserID'] ?? $player['SteamID'] ?? 'Unknown') . ')';
+                            }
+                            
+                            $players[$key]['Name'] = $playerName;
+                            
+                            // Handle other fields with more variations
+                            if (!isset($player['Frags'])) {
+                                $players[$key]['Frags'] = $player['frags'] ?? $player['kills'] ?? $player['score'] ?? $player['Score'] ?? 0;
+                            }
+                            if (!isset($player['TimeF'])) {
+                                $players[$key]['TimeF'] = $player['time'] ?? $player['TimeF'] ?? $player['connected'] ?? $player['Time'] ?? '00:00';
+                            }
+                            
+                            Log::info("Final player data for {$key}: " . json_encode($players[$key], JSON_PRETTY_PRINT));
+                        }
+                    } else {
+                        Log::warning('Players data is not an array or is empty. Type: ' . gettype($players));
                     }
                 }
                 
                 $rcon->disconnect();
             } catch (\Exception $e) {
                 Log::error('rcon.players.error: ' . $e->getMessage());
+                Log::error('Stack trace: ' . $e->getTraceAsString());
                 $error = 'Failed to get server players! Error: ' . $e->getMessage();
             }
         } else {

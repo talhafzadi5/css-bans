@@ -24,7 +24,7 @@
                 left: 0;
                 right: 0;
                 bottom: 0;
-                background: rgba(0, 0, 0, 0.7);
+                background: rgba(0, 0, 0, 0.4);
                 z-index: 1;
             }
             .server-card .card-body {
@@ -145,12 +145,31 @@
             
             function getMapImageUrl(mapName) {
                 const availableMaps = ['de_ancient', 'de_anubis', 'de_dust2', 'de_inferno', 'de_mirage', 'de_nuke', 'de_vertigo', 'de_cache', 'de_cbble'];
-                const cleanMapName = mapName ? mapName.toLowerCase().trim() : '';
+                
+                // Debug: log the original map name
+                console.log('Original map name:', mapName);
+                
+                // Extract just the map name from potential HTML or complex string
+                let cleanMapName = '';
+                if (mapName && typeof mapName === 'string') {
+                    // Remove any HTML tags and get just the text
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = mapName;
+                    cleanMapName = tempDiv.textContent || tempDiv.innerText || '';
+                    cleanMapName = cleanMapName.toLowerCase().trim();
+                }
+                
+                console.log('Clean map name:', cleanMapName);
                 
                 if (availableMaps.includes(cleanMapName)) {
-                    return `{!! env('VITE_SITE_DIR') !!}/images/maps/${cleanMapName}.jpg`;
+                    const imageUrl = `{!! asset('images/maps/') !!}/${cleanMapName}.jpg`;
+                    console.log('Using map image:', imageUrl);
+                    return imageUrl;
                 }
-                return `{!! env('VITE_SITE_DIR') !!}/images/maps/default.jpg`;
+                
+                const defaultUrl = `{!! asset('images/maps/default.jpg') !!}`;
+                console.log('Using default image:', defaultUrl);
+                return defaultUrl;
             }
             
             function renderServerCards(servers) {
@@ -158,6 +177,9 @@
                 let html = '';
                 
                 servers.forEach(server => {
+                    // Debug: log the entire server object
+                    console.log('Server object:', server);
+                    
                     const isOnline = !server.map.includes('badge-danger');
                     const playerCount = isOnline ? server.players : '0/0';
                     const statusClass = isOnline ? 'server-status-online' : 'server-status-offline';
@@ -165,6 +187,7 @@
                     
                     // Extract map name for background image
                     const mapName = isOnline && server.map && !server.map.includes('badge-danger') ? server.map : 'default';
+                    console.log('Map name for background:', mapName);
                     const mapImageUrl = getMapImageUrl(mapName);
                     
                     html += `

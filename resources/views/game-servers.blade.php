@@ -11,9 +11,9 @@
                 cursor: pointer;
                 border: 1px solid #e3e6f0;
                 border-radius: 10px;
-                background-size: cover;
-                background-position: center;
-                background-repeat: no-repeat;
+                background-size: cover !important;
+                background-position: center !important;
+                background-repeat: no-repeat !important;
                 position: relative;
                 overflow: hidden;
             }
@@ -24,7 +24,7 @@
                 left: 0;
                 right: 0;
                 bottom: 0;
-                background: rgba(0, 0, 0, 0.4);
+                background: rgba(0, 0, 0, 0.3) !important;
                 z-index: 1;
             }
             .server-card .card-body {
@@ -177,12 +177,9 @@
                     const mapName = isOnline && server.map && !server.map.includes('badge-danger') ? server.map : 'default';
                     const mapImageUrl = getMapImageUrl(mapName);
                     
-                    // Test with a hardcoded working image first
-                    const testImageUrl = 'https://picsum.photos/400/300?random=' + server.id;
-                    
                     html += `
                         <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mb-4">
-                            <div class="card server-card h-100" style="background-image: url('${testImageUrl}')" onclick="loadServerPlayers(${server.id}, '${server.name.replace(/'/g, "\\'")}')">
+                            <div class="card server-card h-100" style="background-image: url('${mapImageUrl}') !important;" onclick="loadServerPlayers(${server.id}, '${server.name.replace(/'/g, "\\'")}')">
                                 <div class="card-body">
                                     <div class="row align-items-center">
                                         <div class="col-12 mb-3">

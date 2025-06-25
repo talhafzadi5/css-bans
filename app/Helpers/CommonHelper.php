@@ -29,19 +29,25 @@ class CommonHelper
 
    public static function steamProfile($resource) {
        $steamApiKey = env('STEAM_CLIENT_SECRET');
-       if (Cache::has('steam_player_summary_' . $resource->player_steamid)) {
-           return Cache::get('steam_player_summary_' . $resource->player_steamid);
-       } else {
-           // If not found in cache, fetch from API and cache it
-          return Cache::remember('steam_player_summary_' . $resource->player_steamid, 60 * 60 * 24, function () use ($steamApiKey, $resource) {
-               try {
-                   return Http::get("https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={$steamApiKey}&steamids={$resource->player_steamid}")->json();
-               } catch (\Exception $e) {
-                   Log::error('production.steam.avatar.error'. $e->getMessage());
-                   return null;
+       $cacheKey = 'steam_player_summary_' . $resource->player_steamid;
+       
+       // Extended cache time for better performance
+       return Cache::remember($cacheKey, 60 * 60 * 24 * 7, function () use ($steamApiKey, $resource) {
+           try {
+               $response = Http::timeout(5)->retry(2, 100)->get(
+                   "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={$steamApiKey}&steamids={$resource->player_steamid}"
+               );
+               
+               if ($response->successful()) {
+                   return $response->json();
                }
-           });
-       }
+               
+               return ['response' => ['players' => []]]; // Return empty response as fallback
+           } catch (\Exception $e) {
+               Log::error('Steam API error: ' . $e->getMessage());
+               return ['response' => ['players' => []]]; // Return empty response as fallback
+           }
+       });
    }
 
    public static function appealCheck() {

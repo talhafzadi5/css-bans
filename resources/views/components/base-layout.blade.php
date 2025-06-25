@@ -47,7 +47,11 @@
     @vite(['resources/scss/dark/assets/components/list-group.scss'])
     @vite(['resources/scss/light/assets/elements/alert.scss'])
     @vite(['resources/scss/dark/assets/elements/alert.scss'])
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    
+    <!-- Defer non-critical CSS -->
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"></noscript>
+    
     <!-- CUSTOM HEADERS IF ANY -->
     {{$headerFiles}}
     <link rel="stylesheet" href="{{asset('plugins/notification/snackbar/snackbar.min.css')}}">
@@ -347,6 +351,57 @@
                         return originalAddEventListener.call(this, type, listener, options);
                     };
                 }
+            })();
+            
+            // Performance optimizations
+            (function() {
+                // Defer non-critical CSS operations
+                const deferredStyles = [];
+                const originalStyleSet = CSSStyleDeclaration.prototype.setProperty;
+                
+                // Batch DOM operations to reduce reflows
+                let rafId = null;
+                const pendingOperations = [];
+                
+                window.batchDOMOperation = function(operation) {
+                    pendingOperations.push(operation);
+                    if (!rafId) {
+                        rafId = requestAnimationFrame(function() {
+                            pendingOperations.forEach(op => op());
+                            pendingOperations.length = 0;
+                            rafId = null;
+                        });
+                    }
+                };
+                
+                // Optimize image loading
+                window.optimizedImageLoad = function(img, callback) {
+                    if (img.complete) {
+                        callback && callback();
+                        return;
+                    }
+                    
+                    const loadHandler = function() {
+                        img.removeEventListener('load', loadHandler);
+                        callback && callback();
+                    };
+                    
+                    img.addEventListener('load', loadHandler, { passive: true, once: true });
+                };
+                
+                // Debounce resize events
+                let resizeTimeout;
+                const originalResize = window.addEventListener;
+                window.addEventListener = function(type, listener, options) {
+                    if (type === 'resize') {
+                        const debouncedListener = function(e) {
+                            clearTimeout(resizeTimeout);
+                            resizeTimeout = setTimeout(() => listener(e), 150);
+                        };
+                        return originalResize.call(this, type, debouncedListener, options);
+                    }
+                    return originalResize.call(this, type, listener, options);
+                };
             })();
         </script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>

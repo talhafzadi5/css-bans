@@ -162,19 +162,55 @@ class ServerController extends Controller
         $players = [];
         $error = null;
         $server = SaServer::where('id', $serverId)->first();
+        
+        if (!$server) {
+            $error = 'Server not found';
+            return view('admin.servers.players', compact('players', 'server', 'error'));
+        }
+        
         list($serverIp, $serverPort) = explode(":", $server->address);
+        Log::info('Attempting to connect to server: ' . $serverIp . ':' . $serverPort);
+        
         if($this->isPortOpen($serverIp, $serverPort)) {
             try {
                 $rcon->connect($serverIp, $serverPort);
+                
+                // Check if server has RCON configured
+                if ($server->rcon && $server->rcon->password) {
+                    $decryptedPassword = \Illuminate\Support\Facades\Crypt::decrypt($server->rcon->password);
+                    $rcon->setRconPassword($decryptedPassword);
+                    Log::info('Using RCON password for server: ' . $serverId);
+                }
+                
                 $players = $rcon->getPlayers();
+                Log::info('Retrieved players: ' . json_encode($players));
+                
+                // Ensure players array has proper structure
+                if (is_array($players)) {
+                    foreach ($players as $key => $player) {
+                        if (!isset($player['Name']) || empty($player['Name'])) {
+                            Log::warning('Player without name found: ' . json_encode($player));
+                            $players[$key]['Name'] = 'Unknown Player ' . ($key + 1);
+                        }
+                        if (!isset($player['Frags'])) {
+                            $players[$key]['Frags'] = 0;
+                        }
+                        if (!isset($player['TimeF'])) {
+                            $players[$key]['TimeF'] = '00:00';
+                        }
+                    }
+                }
+                
                 $rcon->disconnect();
             } catch (\Exception $e) {
-                Log::error('rcon.players.error' . $e->getMessage());
-                $error = 'Failed to get server players!';
+                Log::error('rcon.players.error: ' . $e->getMessage());
+                $error = 'Failed to get server players! Error: ' . $e->getMessage();
             }
         } else {
+            Log::warning('Port is not open for server: ' . $serverIp . ':' . $serverPort);
             $error = __('admins.rconError');
         }
+        
         return view('admin.servers.players', compact('players', 'server', 'error'));
     }
 

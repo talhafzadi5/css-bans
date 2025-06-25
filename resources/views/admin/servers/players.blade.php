@@ -18,28 +18,34 @@
         </tr>
         </thead>
         <tbody>
-        @foreach ($players as $player)
-            <tr id="{{ $player['Name'] }}">
+        @forelse ($players as $player)
+            <tr id="{{ $player['Name'] ?? 'player_' . $loop->iteration }}">
                 <td>{{ $loop->iteration }}</td>
-                <td>{{ $player['Name'] }}</td>
-                <td>{{ $player['Frags'] }}</td>
-                <td>{{ $player['TimeF'] }}</td>
+                <td>{{ $player['Name'] ?? 'Unknown Player' }}</td>
+                <td>{{ $player['Frags'] ?? 0 }}</td>
+                <td>{{ $player['TimeF'] ?? '00:00' }}</td>
+                @if(PermissionsHelper::hasKickPermission() || PermissionsHelper::hasMutePermission() || PermissionsHelper::hasBanPermission())
                 <td>
                     <!-- Icon for kick action -->
                     @if(PermissionsHelper::hasKickPermission())
-                        <a title="kick" href="#" class="action-icon player" data-action="kick" data-server-id="{{$server->id}}" data-player-name="{{ $player['Name'] }}"><i class="fas fa-user-times"></i></a>
+                        <a title="kick" href="#" class="action-icon player" data-action="kick" data-server-id="{{$server->id}}" data-player-name="{{ $player['Name'] ?? 'Unknown' }}"><i class="fas fa-user-times"></i></a>
                     @endif
                     @if(PermissionsHelper::hasMutePermission())
                     <!-- Icon for mute action -->
-                        <a title="mute" href="#" class="action-icon player" data-action="mute" data-server-id="{{$server->id}}" data-player-name="{{ $player['Name'] }}"><i class="fas fa-volume-mute"></i></a>
+                        <a title="mute" href="#" class="action-icon player" data-action="mute" data-server-id="{{$server->id}}" data-player-name="{{ $player['Name'] ?? 'Unknown' }}"><i class="fas fa-volume-mute"></i></a>
                     @endif
                     @if(PermissionsHelper::hasBanPermission())
                     <!-- Icon for ban action -->
-                        <a title="ban" href="#" class="action-icon player" data-action="ban" data-server-id="{{$server->id}}" data-player-name="{{ $player['Name'] }}"><i class="fas fa-ban"></i></a>
+                        <a title="ban" href="#" class="action-icon player" data-action="ban" data-server-id="{{$server->id}}" data-player-name="{{ $player['Name'] ?? 'Unknown' }}"><i class="fas fa-ban"></i></a>
                     @endif
                 </td>
+                @endif
             </tr>
-        @endforeach
+        @empty
+            <tr>
+                <td colspan="{{ (PermissionsHelper::hasKickPermission() || PermissionsHelper::hasMutePermission() || PermissionsHelper::hasBanPermission()) ? '5' : '4' }}" class="text-center">{{ __('No players online') }}</td>
+            </tr>
+        @endforelse
         </tbody>
     </table>
 </div>

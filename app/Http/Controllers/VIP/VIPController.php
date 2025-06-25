@@ -125,7 +125,7 @@ class VIPController extends Controller
         $data['lastvisit'] = Carbon::now()->timestamp;
         $vip = new VIP($data);
         $vip->save();
-        return redirect()->route('vip.index')->with('success', __('admins.vipAddedSuccessfully'));
+        return redirect()->route('vip.index')->with('success', __('admins.vipAddedSuccessfully'));;
     }
     private function convertSteamID64ToAccountId($steamID64)
     {

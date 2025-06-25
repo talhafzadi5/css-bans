@@ -22,7 +22,6 @@ class Kernel extends HttpKernel
      * @var array<int, class-string|string>
      */
     protected $middleware = [
-        // \App\Http\Middleware\FastResponse::class, // Temporarily disabled
         // \App\Http\Middleware\TrustHosts::class,
         \App\Http\Middleware\TrustProxies::class,
         \Illuminate\Http\Middleware\HandleCors::class,
@@ -31,7 +30,6 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\SetLanguage::class,
-        // \App\Http\Middleware\PerformanceMonitoring::class, // Temporarily disabled
     ];
 
     /**

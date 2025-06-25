@@ -1,6 +1,4 @@
 <?php
-require __DIR__ . '/../public/index.php';
-
 // Fast bootstrap for Vercel serverless
 $startTime = microtime(true);
 

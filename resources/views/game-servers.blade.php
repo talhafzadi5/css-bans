@@ -11,11 +11,14 @@
                 cursor: pointer;
                 border: 1px solid #e3e6f0;
                 border-radius: 10px;
-                background-size: cover !important;
-                background-position: center !important;
-                background-repeat: no-repeat !important;
                 position: relative;
                 overflow: hidden;
+            }
+            .server-card[style*="background-image"] {
+                background-size: cover !important;
+                background-position: center center !important;
+                background-repeat: no-repeat !important;
+                background-attachment: scroll !important;
             }
             .server-card::before {
                 content: '';
@@ -31,6 +34,15 @@
                 position: relative;
                 z-index: 2;
                 color: white;
+            }
+            .server-card .card-body * {
+                color: white !important;
+            }
+            .server-card .text-muted {
+                color: rgba(255, 255, 255, 0.8) !important;
+            }
+            .server-card .text-secondary {
+                color: rgba(255, 255, 255, 0.7) !important;
             }
             .server-card:hover {
                 transform: translateY(-5px);
@@ -179,7 +191,7 @@
                     
                     html += `
                         <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mb-4">
-                            <div class="card server-card h-100" style="background-image: url('${mapImageUrl}') !important;" onclick="loadServerPlayers(${server.id}, '${server.name.replace(/'/g, "\\'")}')">
+                            <div class="card server-card h-100" style="background: url('${mapImageUrl}') center center/cover no-repeat !important;" onclick="loadServerPlayers(${server.id}, '${server.name.replace(/'/g, "\\'")}')">
                                 <div class="card-body">
                                     <div class="row align-items-center">
                                         <div class="col-12 mb-3">

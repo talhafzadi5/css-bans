@@ -21,7 +21,7 @@
     <meta name="description" content="CS2 Admin web panel for Counter-Strike 2 (CS2) servers. Manage bans, mutes, and more using CounterStrikeSharp for enhanced server administration by HobsRKM.">
     <meta name="keywords" content="CS2 admin panel, CS2 admin web panel, Counter-Strike 2 server management, CS2 bans, CS2 mutes, CounterStrikeSharp, Counter-Strike 2 administration, CS2 server tools, css bans">
     <title>{{ $pageTitle }}</title>
-    <link rel="icon" type="image/x-icon" href="{{url('/logo/favicon.ico')}}"/>
+    <link rel="icon" type="image/x-icon" href="{{secure_url('/logo/favicon.ico')}}"/>
     @vite(['resources/scss/layouts/modern-light-menu/light/loader.scss'])
     @vite(['resources/layouts/modern-light-menu/loader.js'])
 

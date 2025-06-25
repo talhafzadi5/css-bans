@@ -318,7 +318,10 @@ class ServerController extends Controller
                             
                             if (!$playerName) {
                                 Log::warning('No valid name found for player: ' . json_encode($player));
-                                $playerName = 'Player ' . ($key + 1) . ' (ID: ' . ($player['Id'] ?? $player['UserID'] ?? $player['SteamID'] ?? 'Unknown') . ')';
+                                // Create a more descriptive name using available information
+                                $playerId = $player['Id'] ?? $player['UserID'] ?? $player['SteamID'] ?? ($key + 1);
+                                $playTime = $player['TimeF'] ?? $player['Time'] ?? '00:00';
+                                $playerName = 'Player #' . $playerId . ' (' . $playTime . ')';
                             }
                             
                             $players[$key]['Name'] = $playerName;

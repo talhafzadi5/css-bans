@@ -15,9 +15,9 @@
             <div class="nav-logo">
                 <div class="nav-item theme-logo">
                     <a href="{{getAppSubDirectoryPath();}}/">
-                        <img src="{{url(getAppSubDirectoryPath().'/logo/logo-dark.svg')}}" class="navbar-logo logo-dark"
+                        <img src="{{secure_url(getAppSubDirectoryPath().'/logo/logo-dark.svg')}}" class="navbar-logo logo-dark"
                              alt="logo">
-                        <img src="{{url(getAppSubDirectoryPath().'/logo/logo-light.svg')}}"
+                        <img src="{{secure_url(getAppSubDirectoryPath().'/logo/logo-light.svg')}}"
                              class="navbar-logo logo-light" alt="logo">
                     </a>
                 </div>

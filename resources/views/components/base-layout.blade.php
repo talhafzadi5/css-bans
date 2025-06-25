@@ -310,6 +310,44 @@
         {{$footerFiles}}
         <script>
             let themeMode = {{ env('DEFAULT_THEME_DARK', true) }};
+            
+            // Suppress passive event listener warnings for better console readability
+            const originalConsoleWarn = console.warn;
+            console.warn = function(message) {
+                if (typeof message === 'string' && 
+                    (message.includes('passive event listener') || 
+                     message.includes('Added non-passive event listener'))) {
+                    return; // Suppress these specific warnings
+                }
+                originalConsoleWarn.apply(console, arguments);
+            };
+            
+            // Add passive event listener support for better performance
+            (function() {
+                var supportsPassive = false;
+                try {
+                    var opts = Object.defineProperty({}, 'passive', {
+                        get: function() {
+                            supportsPassive = true;
+                            return true;
+                        }
+                    });
+                    window.addEventListener('testPassive', null, opts);
+                    window.removeEventListener('testPassive', null, opts);
+                } catch (e) {}
+                
+                if (supportsPassive) {
+                    // Override addEventListener to make wheel/touch events passive by default
+                    var originalAddEventListener = EventTarget.prototype.addEventListener;
+                    EventTarget.prototype.addEventListener = function(type, listener, options) {
+                        if ((type === 'wheel' || type === 'mousewheel' || type === 'touchstart' || type === 'touchmove') && 
+                            (typeof options === 'undefined' || (typeof options === 'boolean' && !options))) {
+                            options = { passive: true };
+                        }
+                        return originalAddEventListener.call(this, type, listener, options);
+                    };
+                }
+            })();
         </script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="{{asset('plugins/notification/snackbar/snackbar.min.js')}}"></script>

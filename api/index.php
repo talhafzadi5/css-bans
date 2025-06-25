@@ -3,7 +3,7 @@
 $startTime = microtime(true);
 
 // Optimize PHP settings for serverless
-ini_set('memory_limit', '512M');
+ini_set('memory_limit', '1024M');
 ini_set('max_execution_time', 50);
 ini_set('max_input_time', 30);
 ini_set('default_socket_timeout', 10);

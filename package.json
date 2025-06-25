@@ -2,10 +2,10 @@
     "name": "css-bans",
     "version": "1.0.0",
     "description": "CS2 Bans Management System",
-    "scripts": {
-        "vercel-build": "bash build.sh",
-        "build": "bash build.sh"
-    },
+      "scripts": {
+    "vercel-build": "composer install --no-dev --optimize-autoloader && bash build.sh",
+    "build": "bash build.sh"
+  },
     "engines": {
         "node": ">=16.x"
     },

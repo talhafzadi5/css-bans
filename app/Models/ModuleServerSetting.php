@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class ModuleServerSetting extends Model
 {
@@ -35,6 +36,12 @@ class ModuleServerSetting extends Model
 
     public function getDbPassAttribute($value)
     {
-        return Crypt::decryptString($value);
+        try {
+            return Crypt::decryptString($value);
+        } catch (DecryptException $e) {
+            // If decryption fails (MAC invalid), return a placeholder
+            // This prevents the page from crashing
+            return '***ENCRYPTED_DATA_INVALID***';
+        }
     }
 }

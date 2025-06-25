@@ -37,7 +37,13 @@
                         <td>{{ $setting->name }}</td>
                         <td>{{ $setting->db_host }}</td>
                         <td>{{ $setting->db_user }}</td>
-                        <td>{{ $setting->db_pass }}</td>
+                        <td>
+                            @if($setting->db_pass === '***ENCRYPTED_DATA_INVALID***')
+                                <span class="text-danger">⚠️ Invalid - Re-enter Password</span>
+                            @else
+                                {{ str_repeat('*', min(strlen($setting->db_pass), 8)) }}
+                            @endif
+                        </td>
                         <td>{{ $setting->db_name }}</td>
                         <td>{{ $setting->active ? __('Yes') : __('No') }}</td>
                         <td>

@@ -32,26 +32,33 @@ class PerformanceServiceProvider extends ServiceProvider
      */
     private function optimizeForServerless(): void
     {
-        // Optimize database connections on first query
-        DB::listen(function ($query) {
+        // Optimize memory and garbage collection
+        ini_set('memory_limit', '512M');
+        ini_set('opcache.enable', '1');
+        
+        if (function_exists('gc_enable')) {
+            gc_enable();
+        }
+
+        // Only optimize DB on actual usage to avoid cold start delays
+        $this->app->resolving('db', function () {
             static $optimized = false;
             if (!$optimized) {
-                PerformanceHelper::optimizeConnections();
+                try {
+                    PerformanceHelper::optimizeConnections();
+                } catch (\Exception $e) {
+                    // Fail silently
+                }
                 $optimized = true;
             }
         });
 
-        // Preload critical data
-        $this->app->booted(function () {
-            PerformanceHelper::preloadCriticalData();
+        // Defer heavy preloading to avoid timeout
+        $this->app->terminating(function () {
+            // Only run cleanup occasionally
+            if (rand(1, 100) <= 5) {
+                PerformanceHelper::cleanupCache();
+            }
         });
-
-        // Optimize memory usage
-        ini_set('memory_limit', '512M');
-        
-        // Optimize garbage collection
-        if (function_exists('gc_enable')) {
-            gc_enable();
-        }
     }
 } 

@@ -199,6 +199,20 @@ Route::get('/clear-cache', function () {
     return response()->json(['message' => 'Cache cleared successfully.']);
 })->name('cache.clear')->middleware('superadmin');
 
+// Lightweight test route for debugging timeout issues
+Route::get('/test', function () {
+    return response()->json([
+        'status' => 'ok',
+        'message' => 'Laravel is working!',
+        'timestamp' => now()->toISOString(),
+        'php_version' => PHP_VERSION,
+        'laravel_version' => app()->version(),
+        'environment' => app()->environment(),
+        'memory_usage' => memory_get_usage(true),
+        'peak_memory' => memory_get_peak_usage(true)
+    ]);
+})->withoutMiddleware();
+
 
 Route::prefix('stats')->group(function () {
     Route::get('/player_count', [ServerController::class, 'trackServerPlayerCounts']);

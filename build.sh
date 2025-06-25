@@ -38,17 +38,25 @@ fi
 if [ -f "artisan" ] && composer show laravel/framework > /dev/null 2>&1; then
     echo "⚡ Optimizing Laravel for production..."
     
-    # Clear all caches first
-    php artisan config:clear --quiet || true
-    php artisan route:clear --quiet || true
-    php artisan view:clear --quiet || true
-    php artisan cache:clear --quiet || true
+    # Set environment variables for caching
+    export APP_ENV=production
+    export APP_DEBUG=false
     
-    # Generate optimized files for production
+    # Clear all caches first (with timeout protection)
+    timeout 30s php artisan config:clear --quiet || true
+    timeout 30s php artisan route:clear --quiet || true
+    timeout 30s php artisan view:clear --quiet || true
+    timeout 30s php artisan cache:clear --quiet || true
+    
+    # Generate optimized files for production (with timeout protection)
     echo "🔧 Generating production cache files..."
-    php artisan config:cache --quiet || echo "⚠️  Config cache failed"
-    php artisan route:cache --quiet || echo "⚠️  Route cache failed"
-    php artisan view:cache --quiet || echo "⚠️  View cache failed"
+    timeout 45s php artisan config:cache --quiet || echo "⚠️  Config cache failed"
+    timeout 45s php artisan route:cache --quiet || echo "⚠️  Route cache failed"  
+    timeout 45s php artisan view:cache --quiet || echo "⚠️  View cache failed"
+    
+    # Create optimized autoloader files
+    echo "📦 Creating optimized autoloader..."
+    timeout 30s php artisan optimize --quiet || echo "⚠️  Optimization failed"
 else
     echo "⚠️  Skipping artisan commands - Laravel not properly installed"
 fi

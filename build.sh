@@ -28,6 +28,12 @@ mkdir -p storage/framework/sessions
 mkdir -p storage/framework/views
 mkdir -p storage/logs
 
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+php artisan cache:clear
+
+
 # Set proper permissions (if not on Windows)
 if [[ "$OSTYPE" != "msys" && "$OSTYPE" != "win32" ]]; then
     chmod -R 755 bootstrap/cache

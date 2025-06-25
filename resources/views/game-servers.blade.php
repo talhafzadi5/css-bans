@@ -11,6 +11,26 @@
                 cursor: pointer;
                 border: 1px solid #e3e6f0;
                 border-radius: 10px;
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                position: relative;
+                overflow: hidden;
+            }
+            .server-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.7);
+                z-index: 1;
+            }
+            .server-card .card-body {
+                position: relative;
+                z-index: 2;
+                color: white;
             }
             .server-card:hover {
                 transform: translateY(-5px);
@@ -123,6 +143,16 @@
                     });
             }
             
+            function getMapImageUrl(mapName) {
+                const availableMaps = ['de_ancient', 'de_anubis', 'de_dust2', 'de_inferno', 'de_mirage', 'de_nuke', 'de_vertigo', 'de_cache', 'de_cbble'];
+                const cleanMapName = mapName ? mapName.toLowerCase().trim() : '';
+                
+                if (availableMaps.includes(cleanMapName)) {
+                    return `{!! env('VITE_SITE_DIR') !!}/images/maps/${cleanMapName}.jpg`;
+                }
+                return `{!! env('VITE_SITE_DIR') !!}/images/maps/default.jpg`;
+            }
+            
             function renderServerCards(servers) {
                 const container = document.getElementById('serverCards');
                 let html = '';
@@ -133,9 +163,13 @@
                     const statusClass = isOnline ? 'server-status-online' : 'server-status-offline';
                     const statusText = isOnline ? '{{ __("Online") }}' : '{{ __("Offline") }}';
                     
+                    // Extract map name for background image
+                    const mapName = isOnline && server.map && !server.map.includes('badge-danger') ? server.map : 'default';
+                    const mapImageUrl = getMapImageUrl(mapName);
+                    
                     html += `
                         <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mb-4">
-                            <div class="card server-card h-100" onclick="loadServerPlayers(${server.id}, '${server.name.replace(/'/g, "\\'")}')">
+                            <div class="card server-card h-100" style="background-image: url('${mapImageUrl}')" onclick="loadServerPlayers(${server.id}, '${server.name.replace(/'/g, "\\'")}')">
                                 <div class="card-body">
                                     <div class="row align-items-center">
                                         <div class="col-12 mb-3">

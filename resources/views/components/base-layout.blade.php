@@ -88,8 +88,22 @@
         }
         
         body[dir="rtl"] .main-content {
-            margin-right: 0;
-            margin-left: auto;
+            margin-right: 260px !important;
+            margin-left: 0 !important;
+        }
+        
+        body[dir="rtl"] .sidebar-wrapper {
+            right: 0 !important;
+            left: auto !important;
+        }
+        
+        body[dir="rtl"] #container {
+            padding-right: 0 !important;
+            padding-left: 0 !important;
+        }
+        
+        body[dir="rtl"] .main-container {
+            direction: rtl;
         }
         
         body[dir="rtl"] .table th,
@@ -168,9 +182,21 @@
             text-align: right;
         }
         
-        body[dir="rtl"] .sidebar-wrapper {
-            right: 0;
-            left: auto;
+        /* Responsive adjustments for RTL */
+        @media (max-width: 1199px) {
+            body[dir="rtl"] .main-content {
+                margin-right: 0 !important;
+                margin-left: 0 !important;
+            }
+        }
+        
+        body[dir="rtl"] .layout-px-spacing {
+            padding-right: 20px;
+            padding-left: 20px;
+        }
+        
+        body[dir="rtl"] .middle-content {
+            text-align: right;
         }
         
         /* Fix for Bootstrap components in RTL */
@@ -181,6 +207,30 @@
         body[dir="rtl"] .dropdown-toggle::after {
             margin-left: 0;
             margin-right: 0.255em;
+        }
+        
+        /* Header positioning for RTL */
+        body[dir="rtl"] .header-container {
+            right: 260px !important;
+            left: 0 !important;
+            width: calc(100% - 260px) !important;
+        }
+        
+        @media (max-width: 1199px) {
+            body[dir="rtl"] .header-container {
+                right: 0 !important;
+                width: 100% !important;
+            }
+        }
+        
+        /* Sidebar toggle positioning */
+        body[dir="rtl"] .sidebarCollapse {
+            float: right;
+        }
+        
+        /* Ensure content doesn't overlap */
+        body[dir="rtl"] .main-content {
+            min-height: calc(100vh - 60px);
         }
     </style>
     <!-- END GLOBAL MANDATORY STYLES -->

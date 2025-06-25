@@ -200,8 +200,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\FortifyServiceProvider::class,
-        App\Providers\PerformanceServiceProvider::class,
-        AutoTranslateProvider::class,
+        // App\Providers\PerformanceServiceProvider::class, // Temporarily disabled
+        // AutoTranslateProvider::class, // Temporarily disabled - might be missing
     ],
 
     /*
